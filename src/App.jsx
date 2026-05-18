@@ -1,10 +1,7 @@
+import Home from "./pages/Home";
+
 function App() {
-  const judul = "Sinemata";
-  return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold underline">{judul}</h1>
-    </div>
-  );
+  return <Home />;
 }
 
 export default App;
