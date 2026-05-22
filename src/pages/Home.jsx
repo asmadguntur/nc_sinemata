@@ -6,7 +6,7 @@ function Home() {
   return (
     <>
       <Navbar />
-      <main class="main-content pt-24">
+      <main className="main-content pt-24">
         <Hero />
         <Trending />
       </main>
