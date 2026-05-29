@@ -1,4 +1,4 @@
-function Navbar() {
+function Navbar({ activePage = "Home" }) {
   return (
     <header className="navbar bg-slate-900 text-gray-200 py-5 px-8 font-inter flex justify-between items-center fixed w-full top-0 left-0 z-50">
       {/* <!-- header content logo-navlink --> */}
@@ -12,22 +12,50 @@ function Navbar() {
         <nav>
           <ul className="nav-links text-sm flex justify-between gap-x-6">
             <li>
-              <a href="#" className="text-gray-200 hover:text-gray-900">
+              <a
+                href="/"
+                className={
+                  activePage === "home"
+                    ? "text-orange-400"
+                    : "text-gray-200 hover:text-gray-900"
+                }
+              >
                 Home
               </a>
             </li>
             <li>
-              <a href="#" className="text-gray-700 hover:text-gray-900">
-                Browse
+              <a
+                href="/discover"
+                className={
+                  activePage === "discover"
+                    ? "text-orange-400"
+                    : "text-gray-200 hover:text-gray-900"
+                }
+              >
+                Discover
               </a>
             </li>
             <li>
-              <a href="#" className="text-gray-700 hover:text-gray-900">
+              <a
+                href="/watchlist"
+                className={
+                  activePage === "watchlist"
+                    ? "text-orange-400"
+                    : "text-gray-200 hover:text-gray-900"
+                }
+              >
                 Watchlist
               </a>
             </li>
             <li>
-              <a href="#" className="text-gray-700 hover:text-gray-900">
+              <a
+                href="/my-reviews"
+                className={
+                  activePage === "my-reviews"
+                    ? "text-orange-400"
+                    : "text-gray-200 hover:text-gray-900"
+                }
+              >
                 My Reviews
               </a>
             </li>
