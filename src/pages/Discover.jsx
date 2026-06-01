@@ -1,8 +1,13 @@
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import MovieCard from "../components/MovieCard";
+import ErrorBoundary from "../components/ErrorBoundary";
 // import Trending from "../components/Trending";
 // import Footer from "../components/Footer";
+
+// import url and key from .env
+const TMDB_BASE_URL = import.meta.env.VITE_TMDB_BASE_URL;
+const TMDB_TOKEN = import.meta.env.VITE_TMDB_TOKEN;
 
 export default function Discover() {
   const [query, setQuery] = useState("");
@@ -12,21 +17,30 @@ export default function Discover() {
   const fetchMovies = async () => {
     setLoading(true);
     try {
-      // Replace this with your actual API call
-      const response = await fetch("/api/movies");
+      const response = await fetch(
+        `${TMDB_BASE_URL}/search/movie?query=${encodeURIComponent(query)}`,
+        {
+          headers: {
+            Authorization: `Bearer ${TMDB_TOKEN}`,
+          },
+        },
+      );
       const data = await response.json();
-      setMovies(data.results);
+      setMovies(data.results || []);
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching movies:", error);
-    } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    // Simulate an API call to fetch movies
-
-    fetchMovies();
+    if (query) {
+      fetchMovies();
+    } else {
+      // KETIKA KATA KUNCI DIHAPUS:
+      setMovies([]); // Mengosongkan data film sehingga movies.length menjadi 0
+    }
   }, [query]);
 
   return (
@@ -55,16 +69,17 @@ export default function Discover() {
               </g>
             </svg>
             <input
+              onChange={(e) => setQuery(e.target.value)}
               type="search"
               required
               placeholder="Search"
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
             />
           </label>
           <p className="text-sm text-gray-500">
-            Ditemukan <span className="font-bold text-orange-400">12 film</span>{" "}
-            untuk "Inception"
+            Ditemukan{" "}
+            <span className="font-bold text-orange-400">{movies.length}</span>{" "}
+            film untuk {query || "No query"}.
           </p>
         </section>
         <section className="filter-section flex items-center gap-x-2 py-4 px-8">
@@ -79,20 +94,38 @@ export default function Discover() {
           </button>
         </section>
         <section className="sort-section flex items-center gap-x-2 py-4 px-8">
-          <ul className="movie-grid flex flex-wrap gap-6">
+          <div className="movie-grid flex flex-wrap gap-6">
             {/* <!-- Movie card --> */}
-            <MovieCard
-              movie={{
-                id: 1,
-                title: "Inception",
-                genre: ["Sci-Fi", "Action"],
-                year: 2010,
-                rating: 8.8,
-                favorite: true,
-                image: "https://dummyimage.com/300x450/000/fff&text=Inception",
-              }}
-            />
-          </ul>
+            <ErrorBoundary>
+              {loading ? (
+                <p>Loading...</p>
+              ) : movies.length > 0 ? (
+                <>
+                  {movies.map((movie) => (
+                    <MovieCard
+                      key={movie.id}
+                      title={movie.title}
+                      genre={movie.genre_ids} // You may want to map genre_ids to actual genre names
+                      year={
+                        movie.release_date
+                          ? new Date(movie.release_date).getFullYear()
+                          : "N/A"
+                      }
+                      rating={movie.vote_average}
+                      favorite={false}
+                      image={
+                        movie.poster_path
+                          ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+                          : null
+                      }
+                    />
+                  ))}
+                </>
+              ) : (
+                <p>No movies found.</p>
+              )}
+            </ErrorBoundary>
+          </div>
         </section>
       </main>
     </>

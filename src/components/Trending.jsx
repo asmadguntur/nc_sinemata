@@ -109,7 +109,7 @@ function Trending() {
       {/* <!-- Trending Content --> */}
       <div className="trending-container">
         {/* <!-- Movie List --> */}
-        <ul
+        <div
           id="movie-trending-list"
           className="trending-list flex flex-wrap gap-6 overflow-x-auto px-8 py-4 max-w-full "
         >
@@ -118,7 +118,7 @@ function Trending() {
             if (index >= 6) return null; // Batasi hanya menampilkan 5 movie pertama
             return <Moviecard key={movie.id} movie={movie} />;
           })}
-        </ul>
+        </div>
       </div>
     </section>
   );
