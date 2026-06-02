@@ -1,99 +1,34 @@
+import { useEffect, useState } from "react";
 import Moviecard from "./Moviecard";
 
-const trendingMovies = [
-  {
-    id: 1,
-    title: "Chronos Letterbound",
-    genre: ["Sci-Fi", "Drama"],
-    year: 2024,
-    rating: 8.7,
-    favorite: true,
-    image: "https://dummyimage.com/300x450/7b2cbf/ffffff&text=Chronos",
-  },
-  {
-    id: 2,
-    title: "Embersea Vigil",
-    genre: ["Drama"],
-    year: 2024,
-    rating: 8.1,
-    favorite: true,
-    image: "https://dummyimage.com/300x450/2a9d8f/ffffff&text=Embersea",
-  },
-  {
-    id: 3,
-    title: "Riptide Hours",
-    genre: ["Sci-Fi", "Drama"],
-    year: 2024,
-    rating: 8.5,
-    favorite: false,
-    image: "https://dummyimage.com/300x450/e63946/ffffff&text=Riptide",
-  },
-  {
-    id: 4,
-    title: "Vesper Quiet",
-    genre: ["Sci-Fi", "Drama"],
-    year: 2024,
-    rating: 8.7,
-    favorite: false,
-    image: "https://dummyimage.com/300x450/f4a261/ffffff&text=Vesper",
-  },
-  {
-    id: 5,
-    title: "Nephele Drift",
-    genre: ["Sci-Fi", "Drama"],
-    year: 2024,
-    rating: 9,
-    favorite: true,
-    image: "https://dummyimage.com/300x450/457b9d/ffffff&text=Nephele",
-  },
-  {
-    id: 6,
-    title: "Obsidian Lullaby",
-    genre: ["Sci-Fi", "Drama"],
-    year: 2024,
-    rating: 8.7,
-    favorite: false,
-    image: "https://dummyimage.com/300x450/6c757d/ffffff&text=Obsidian",
-  },
-  {
-    id: 7,
-    title: "Aurora Veil",
-    genre: ["Fantasy", "Adventure"],
-    year: 2023,
-    rating: 8.5,
-    favorite: true,
-    image: "https://dummyimage.com/300x450/8338ec/ffffff&text=Aurora",
-  },
-  {
-    id: 8,
-    title: "Solaris Echo",
-    genre: ["Sci-Fi"],
-    year: 2022,
-    rating: 8.3,
-    favorite: false,
-    image: "https://dummyimage.com/300x450/f77f00/ffffff&text=Solaris",
-  },
-  {
-    id: 9,
-    title: "Velvet Horizon",
-    genre: ["Romance", "Drama"],
-    year: 2021,
-    rating: 8.1,
-    favorite: true,
-    image: "https://dummyimage.com/300x450/d62828/ffffff&text=Velvet",
-  },
-  {
-    id: 10,
-    title: "Midnight Pulse",
-    genre: ["Thriller", "Mystery"],
-    year: 2024,
-    rating: 8.9,
-    favorite: false,
-    image: "https://dummyimage.com/300x450/1d3557/ffffff&text=Midnight",
-  },
-];
+// Import url and key from .env
+const TMDB_BASE_URL = import.meta.env.VITE_TMDB_BASE_URL;
+const TMDB_TOKEN = import.meta.env.VITE_TMDB_TOKEN;
 
 function Trending() {
+  const [trendingMovies, setTrendingMovies] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch trending movies from TMDB API
+  useEffect(() => {
+    const fetchTrendingMovies = async () => {
+      try {
+        const response = await fetch(`${TMDB_BASE_URL}/trending/movie/day`, {
+          headers: {
+            Authorization: `Bearer ${TMDB_TOKEN}`,
+          },
+        });
+        const data = await response.json();
+        setTrendingMovies(data.results || []);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching trending movies:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchTrendingMovies();
+  }, []);
   return (
     <section className="trending-section">
       {/* <!-- Section Header --> */}
@@ -114,10 +49,34 @@ function Trending() {
           className="trending-list flex flex-wrap gap-6 overflow-x-auto px-8 py-4 max-w-full "
         >
           {/* <!-- Movie card --> */}
-          {trendingMovies.map((movie, index) => {
-            if (index >= 6) return null; // Batasi hanya menampilkan 5 movie pertama
-            return <Moviecard key={movie.id} movie={movie} />;
-          })}
+          {loading ? (
+            <p>Loading trending movies...</p>
+          ) : trendingMovies.length > 0 ? (
+            trendingMovies.map((movie, index) => {
+              if (index >= 6) return null; // Batasi hanya menampilkan 6 movie pertama
+              return (
+                <Moviecard
+                  key={movie.id}
+                  title={movie.title}
+                  genre={movie.genre_ids || []}
+                  year={
+                    movie.release_date
+                      ? new Date(movie.release_date).getFullYear()
+                      : "N/A"
+                  }
+                  rating={movie.vote_average}
+                  favorite={false}
+                  image={
+                    movie.poster_path
+                      ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+                      : null
+                  }
+                />
+              );
+            })
+          ) : (
+            <p>No trending movies available.</p>
+          )}
         </div>
       </div>
     </section>
