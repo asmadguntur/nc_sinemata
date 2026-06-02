@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 function Navbar({ activePage = "Home" }) {
   return (
     <header className="navbar bg-slate-900 text-gray-200 py-5 px-8 font-inter flex justify-between items-center fixed w-full top-0 left-0 z-50">
@@ -5,59 +7,33 @@ function Navbar({ activePage = "Home" }) {
       <div className="logo-nav-container flex items-center gap-x-14">
         {/* <!-- logo --> */}
         <div className="logo flex items-center gap-x-2">
-          <div className="circle bg-orange-400 h-3 w-3 rounded-full ml-1"></div>
-          <span className="font-bebas text-white text-2xl">SINEMATA</span>
+          <Link to="/" className="flex items-center gap-x-2">
+            <div className="circle bg-orange-400 h-3 w-3 rounded-full ml-1"></div>
+            <span className="font-bebas text-white text-2xl">SINEMATA</span>
+          </Link>
         </div>
         {/* <!-- navlinks --> */}
         <nav>
           <ul className="nav-links text-sm flex justify-between gap-x-6">
             <li>
-              <a
-                href="/"
-                className={
-                  activePage === "home"
-                    ? "text-orange-400"
-                    : "text-gray-200 hover:text-gray-900"
-                }
-              >
+              <Link to="/" className={activePage === "Home" ? "text-orange-400" : "text-gray-200 hover:text-gray-900"}>
                 Home
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="/discover"
-                className={
-                  activePage === "discover"
-                    ? "text-orange-400"
-                    : "text-gray-200 hover:text-gray-900"
-                }
-              >
+              <Link to="/discover" className={activePage === "discover" ? "text-orange-400" : "text-gray-200 hover:text-gray-900"}>
                 Discover
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="/watchlist"
-                className={
-                  activePage === "watchlist"
-                    ? "text-orange-400"
-                    : "text-gray-200 hover:text-gray-900"
-                }
-              >
+              <Link to="/watchlist" className={activePage === "watchlist" ? "text-orange-400" : "text-gray-200 hover:text-gray-900"}>
                 Watchlist
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="/my-reviews"
-                className={
-                  activePage === "my-reviews"
-                    ? "text-orange-400"
-                    : "text-gray-200 hover:text-gray-900"
-                }
-              >
+              <Link to="/my-reviews" className={activePage === "my-reviews" ? "text-orange-400" : "text-gray-200 hover:text-gray-900"}>
                 My Reviews
-              </a>
+              </Link>
             </li>
           </ul>
         </nav>
