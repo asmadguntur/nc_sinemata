@@ -1,4 +1,4 @@
-import { useParams } from "react-router";
+import { useParams } from "react-router-dom";
 import Footer from "../components/Footer";
 import HeadingContent from "../components/MovieDetails/HeadingContent";
 import MovieDescription from "../components/MovieDetails/MovieDescription";
